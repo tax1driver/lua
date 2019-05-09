@@ -93,8 +93,8 @@ end
 menu = {
     enabled = ui.new_checkbox("RAGE", "Other", "H: Aimbot history"),
     color = ui.new_color_picker("RAGE", "Other", "H: Logging picker", 16, 22, 29, 160),
-    options = ui.new_multiselect("RAGE", "Other", "H:Options", {"Id", "Player", "Hitbox", "Hit chance", "Damage", "Backtrack", "Body yaw", "Flags"}),
-    max_amount = ui.new_slider("RAGE", "Other", "Maximum amount", 2, 10, 5),
+    options = ui.new_multiselect("RAGE", "Other", "H: Options", {"Id", "Player", "Hitbox", "Hit chance", "Damage", "Backtrack", "Body yaw", "Flags"}),
+    max_amount = ui.new_slider("RAGE", "Other", "H: Maximum amount", 2, 10, 5),
     size_x = ui.new_slider("RAGE", "Other", "H: X offset", 1, width , width / 2, true, "px"),
     size_y = ui.new_slider("RAGE", "Other", "H: Y offset", 1, height, 80, true, "px"),
     all_flags = ui.new_checkbox("RAGE", "Other", "H: Draw all flags"),

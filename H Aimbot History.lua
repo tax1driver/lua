@@ -47,6 +47,7 @@ local table_fire = {}
 local table_main = {}
 local pitch_tick = {}
 local rounds = 0
+local animation_boundary = 500
 
 local def_order = {"Id", "Player", "Hitbox", "Hit chance", "Damage", "Backtrack", "Body yaw", "Flags"}
 local order = {"Id", "Player", "Hitbox", "Hit chance", "Damage", "Backtrack", "Body yaw", "Flags"}
@@ -153,11 +154,11 @@ local draw = {
         enable = false,
         size = 35,
         header = "ID",
-        draw = function(c, pitch, yaw, data, sum)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
             if rounds == data.round then 
-                draw_text(c, pitch + sum, yaw + 1, 100, 255, 100, 255, nil, 70, data.id)
+                draw_text(c, pitch + sum, yaw + 1, 100, 255, 100, 255*alpha_modifier, nil, 70, data.id)
             else 
-                draw_text(c, pitch + sum , yaw + 1, 255, 255, 255, 255, nil, 70, data.id)
+                draw_text(c, pitch + sum , yaw + 1, 255, 255, 255, 255*alpha_modifier, nil, 70, data.id)
             end
         end
     },
@@ -166,7 +167,7 @@ local draw = {
         enable = true,
         size = 83,
         header = "PLAYER",
-        draw = function(c, pitch, yaw, data, sum)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
             local max_char = 16
             local width = renderer_measure_text(nil, string_sub(data.nickname, 0, max_char))
             
@@ -178,9 +179,9 @@ local draw = {
                 clamped = "..."
             end
             if data.f_is_dead then 
-                draw_text(c, pitch + sum, yaw + 1, 255, 100, 100, 255, nil, 70, string_sub(data.nickname, 0, max_char)..clamped)
+                draw_text(c, pitch + sum, yaw + 1, 255, 100, 100, 255*alpha_modifier, nil, 70, string_sub(data.nickname, 0, max_char)..clamped)
             else 
-                draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255, nil, 70, string_sub(data.nickname, 0, max_char)..clamped)
+                draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255*alpha_modifier, nil, 70, string_sub(data.nickname, 0, max_char)..clamped)
             end
         end
     }, 
@@ -189,8 +190,8 @@ local draw = {
         enable = false,
         size = 102,
         header = "HITBOX",
-        draw = function(c, pitch, yaw, data, sum)
-            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255, nil, 70, data.hitbox)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
+            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255*alpha_modifier, nil, 70, data.hitbox)
         end
     },
 
@@ -198,8 +199,8 @@ local draw = {
         enable = false,
         size = 56,
         header = "HIT  CHANCE",
-        draw = function(c, pitch, yaw, data, sum)
-            draw_text(c, pitch + sum, yaw + 1, 255, toint(255 * data.hit_chance / 100), toint(255 * data.hit_chance / 100), 255, nil, 70, data.hit_chance, "%")
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
+            draw_text(c, pitch + sum, yaw + 1, 255, toint(255 * data.hit_chance / 100), toint(255 * data.hit_chance / 100), 255*alpha_modifier, nil, 70, data.hit_chance, "%")
         end
     }, 
 
@@ -207,8 +208,8 @@ local draw = {
         enable = false,
         size = 53,
         header = "DAMAGE",
-        draw = function(c, pitch, yaw, data, sum)
-            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255, nil, 70, data.damage)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
+            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255*alpha_modifier, nil, 70, data.damage)
         end
     },
 
@@ -216,8 +217,8 @@ local draw = {
         enable = false,
         size = 37,
         header = "BT",
-        draw = function(c, pitch, yaw, data, sum)
-            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255, nil, 70, data.backtrack, "t")
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
+            draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255*alpha_modifier, nil, 70, data.backtrack, "t")
         end
     },
 
@@ -225,7 +226,7 @@ local draw = {
         enable = false,
         size = 56,
         header = "BODY  YAW",
-        draw = function(c, pitch, yaw, data, sum)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
             draw_text(c, pitch + sum, yaw + 1, 255, 255, 255, 255, nil, 70, data.body_yaw, "°")
         end
     },
@@ -234,57 +235,57 @@ local draw = {
         enable = false,
         size = 52,
         header = "FLAGS",
-        draw = function(c, pitch, yaw, data, sum)
+        draw = function(c, pitch, yaw, data, sum, alpha_modifier)
             local flags_size = 0
         
             if ui_get(menu.all_flags) then
-                local dr, dg, db, da = 96, 96, 96, 127
+                local dr, dg, db, da = 96, 96, 96, 127 * alpha_modifier
 
-                if data.f_interpolated then draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 84, 255, 255, nil, 70, "I") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "I") end
+                if data.f_interpolated then draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 84, 255, 255*alpha_modifier, nil, 70, "I") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "I") end
                 flags_size = flags_size + 6
 
-                if data.f_extrapolated then draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 255, 84, 255, nil, 70, "E") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "E") end
+                if data.f_extrapolated then draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 255, 84, 255*alpha_modifier, nil, 70, "E") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "E") end
                 flags_size = flags_size + 8
 
-                if data.f_priority then draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 84, 84, 255, nil, 70, "H") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "H") end
+                if data.f_priority then draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 84, 84, 255*alpha_modifier, nil, 70, "H") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "H") end
                 flags_size = flags_size + 9
         
-                if data.f_bodyaim then draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 165, 0, 255, nil, 70, "B") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "B") end
+                if data.f_bodyaim then draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 165, 0, 255*alpha_modifier, nil, 70, "B") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "B") end
                 flags_size = flags_size + 8
         
-                if data.f_lagcomp then draw_text(c, pitch + sum + flags_size, yaw + 1, 0, 255, 255, 255, nil, 70, "LC") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "LC") end
+                if data.f_lagcomp then draw_text(c, pitch + sum + flags_size, yaw + 1, 0, 255, 255, 255*alpha_modifier, nil, 70, "LC") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "LC") end
                 flags_size = flags_size + 15
         
-                if data.f_pitch then draw_text(c, pitch + sum + flags_size, yaw + 1, 149, 184, 6, 255, nil, 70, "P") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "P") end
+                if data.f_pitch then draw_text(c, pitch + sum + flags_size, yaw + 1, 149, 184, 6, 255*alpha_modifier, nil, 70, "P") else draw_text(c, pitch + sum + flags_size, yaw + 1, dr, dg, db, da, nil, 70, "P") end
                 flags_size = flags_size + 15
             else 
                 if data.f_interpolated then 
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 84, 255, 255, nil, 70, "I")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 84, 255, 255*alpha_modifier, nil, 70, "I")
                     flags_size = flags_size + 6
                 end
                 
                 if data.f_extrapolated then 
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 255, 84, 255, nil, 70, "E")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 84, 255, 84, 255*alpha_modifier, nil, 70, "E")
                     flags_size = flags_size + 8
                 end
                 
                 if data.f_priority then 
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 84, 84, 255, nil, 70, "H")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 84, 84, 255*alpha_modifier, nil, 70, "H")
                     flags_size = flags_size + 9
                 end
         
                 if data.f_bodyaim then 
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 165, 0, 255, nil, 70, "B")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 255, 165, 0, 255*alpha_modifier, nil, 70, "B")
                     flags_size = flags_size + 8
                 end
         
                 if data.f_lagcomp then 
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 0, 255, 255, 255, nil, 70, "LC")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 0, 255, 255, 255*alpha_modifier, nil, 70, "LC")
                     flags_size = flags_size + 15
                 end
         
                 if data.f_pitch then
-                    draw_text(c, pitch + sum + flags_size, yaw + 1, 149, 184, 6, 255, nil, 70, "P")
+                    draw_text(c, pitch + sum + flags_size, yaw + 1, 149, 184, 6, 255*alpha_modifier, nil, 70, "P")
                     flags_size = flags_size + 8
                 end
             end
@@ -407,7 +408,8 @@ client.set_event_callback("aim_fire", function(e)
             ["f_bodyaim"] = bodyaim,
             ["f_lagcomp"] = e.teleported,
             ["f_pitch"] = ticke,
-            ["f_is_dead"] = false
+            ["f_is_dead"] = false,
+            ["time_added"] = client_timestamp()
         }
     end
 end)
@@ -458,7 +460,8 @@ client.set_event_callback("player_hurt", function(e)
                 ["f_bodyaim"] = table_fire.f_bodyaim,
                 ["f_lagcomp"] = table_fire.f_lagcomp,
                 ["f_pitch"] = table_fire.f_pitch,
-                ["f_is_dead"] = is_dead
+                ["f_is_dead"] = is_dead,
+                ["time_added"] = table_fire.time_added
             }
         else
             table_main[1] = {
@@ -478,7 +481,8 @@ client.set_event_callback("player_hurt", function(e)
                 ["f_bodyaim"] = false,
                 ["f_lagcomp"] = false,
                 ["f_pitch"] = false,
-                ["f_is_dead"] = is_dead
+                ["f_is_dead"] = is_dead,
+                ["time_added"] = table_fire.time_added
             }
         end
     end
@@ -525,7 +529,8 @@ client.set_event_callback("aim_miss", function(e)
             ["f_bodyaim"] = table_fire.f_bodyaim,
             ["f_lagcomp"] = table_fire.f_lagcomp,
             ["f_pitch"] = table_fire.f_pitch,
-            ["f_is_dead"] = false
+            ["f_is_dead"] = false,
+            ["time_added"] = table_fire.time_added
         }
     end
 end)
@@ -558,10 +563,15 @@ function drawTable(c, count, x, y, data)
 
         draw_rectangle(c, x, yaw, 2, 15, r, g, b, 255)
 
+        local alpha_modifier = (client_timestamp() - data.time_added) / animation_boundary
+        if alpha_modifier > 1 then
+            alpha_modifier = 1
+        end
+
         for i = 1, 8 do 
             local element = get_ordered_element(i)
             if element.enable then
-                element.draw(c, pitch, yaw, data, sum)
+                element.draw(c, pitch, yaw, data, sum, alpha_modifier)
                 sum = sum + element.size
             end
         end
@@ -639,3 +649,4 @@ client.set_event_callback("cs_game_disconnected", function()
     pitch_tick = {}
     rounds = 0
 end)
+

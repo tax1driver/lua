@@ -24,7 +24,7 @@ local draw_rectangle = client.draw_rectangle
 local width, height = client.screen_size()
 local floor = math.floor     
 
-function toint(n)
+local function toint(n)
     local s = tostring(n)
     local i, j = s:find('%.')
     if i then
@@ -34,7 +34,7 @@ function toint(n)
     end
 end
 
-function table_indexof(t, e)
+local function table_indexof(t, e)
     for k,v in pairs(t) do
         if v == e then
             return k
@@ -619,7 +619,7 @@ client.set_event_callback("paint", function(c)
     end
 end)
 
-function visibility()
+local function visibility()
     local rpc = ui_get(menu.enabled)
     ui.set_visible(menu.options, rpc)
     ui.set_visible(menu.max_amount, rpc)

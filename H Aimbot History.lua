@@ -314,18 +314,19 @@ local function get_ordered_element(i)
 end
 
 ui.set_callback(menu.options, function()
-    if #ui_get(menu.options) == 0 then
+    local options = ui_get(menu.options)
+    if #options == 0 then
         ui_set(menu.options, "Player")  
     end
 
-    if contains(menu.options, "Id") then draw.id.enable = true else draw.id.enable = false end
-    if contains(menu.options, "Player") then draw.target.enable = true else draw.target.enable = false end
-    if contains(menu.options, "Hitbox") then draw.hitbox.enable = true else draw.hitbox.enable = false end
-    if contains(menu.options, "Hit chance") then draw.hit_chance.enable = true else draw.hit_chance.enable = false end
-    if contains(menu.options, "Damage") then draw.damage.enable = true else draw.damage.enable = false end
-    if contains(menu.options, "Backtrack") then draw.backtrack.enable = true else draw.backtrack.enable = false end
-    if contains(menu.options, "Body yaw") then draw.body_yaw.enable = true else draw.body_yaw.enable = false end
-    if contains(menu.options, "Flags") then draw.flags.enable = true else draw.flags.enable = false end
+    if contains(options, "Id") then draw.id.enable = true else draw.id.enable = false end
+    if contains(options, "Player") then draw.target.enable = true else draw.target.enable = false end
+    if contains(options, "Hitbox") then draw.hitbox.enable = true else draw.hitbox.enable = false end
+    if contains(options, "Hit chance") then draw.hit_chance.enable = true else draw.hit_chance.enable = false end
+    if contains(options, "Damage") then draw.damage.enable = true else draw.damage.enable = false end
+    if contains(options, "Backtrack") then draw.backtrack.enable = true else draw.backtrack.enable = false end
+    if contains(options, "Body yaw") then draw.body_yaw.enable = true else draw.body_yaw.enable = false end
+    if contains(options, "Flags") then draw.flags.enable = true else draw.flags.enable = false end
 end)
 ui_set(menu.options, "Player") 
 
